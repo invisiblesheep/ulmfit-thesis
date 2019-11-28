@@ -30,7 +30,7 @@ printf "LR is %s\n" "$LR"
 printf "MODEL_NAME is %s\n" "$MODEL_NAME"
 printf "VOCAB_SIZE is %s\n" "$VOCAB_SIZE"
 
-OUTPUT_DIR="${DATA_DIR}/processed/up_low/tmp"
+OUTPUT_DIR="${DATA_DIR}/processed"
 SENTENCEPIECE_MODEL_NAME="${OUTPUT_DIR}/sp-${VOCAB_SIZE}.model"
 SENTENCEPIECE_VOCAB_NAME="${OUTPUT_DIR}/sp-${VOCAB_SIZE}.vocab"
 

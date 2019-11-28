@@ -5,13 +5,12 @@ set -e
 VOCAB_SIZE=$1
 DATA_DIR=$2
 SENTENCE_FILE="${DATA_DIR}/$3"
-TEMP_DIR="${DATA_DIR}/processed/up_low/tmp"
-OUTPUT_DIR="${DATA_DIR}/processed/up_low/tmp"
+OUTPUT_DIR="${DATA_DIR}/processed"
 SENTENCEPIECE_MODEL_NAME="${OUTPUT_DIR}/sp-${VOCAB_SIZE}"
 
 # sort sentences and remove duplicates
-mkdir -p "${TEMP_DIR}"
-UNIQ_SENTENCE_FILE="${TEMP_DIR}/train_uniq.txt"
+mkdir -p "${OUTPUT_DIR}"
+UNIQ_SENTENCE_FILE="${OUTPUT_DIR}/train_uniq.txt"
 if [ ! -f "${UNIQ_SENTENCE_FILE}" ] ; then
     sort "${SENTENCE_FILE}" | uniq > "${UNIQ_SENTENCE_FILE}"
 fi
