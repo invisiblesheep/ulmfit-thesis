@@ -3,9 +3,9 @@ set -e
 
 while getopts ":d:f:b:e:l:m:v:s:" opt; do
   case $opt in
-    d) DATA_DIR="$OPTARG"
+    f) DATA_DIR="$OPTARG"
     ;;
-    f) SENTENCE_FILE="$OPTARG"
+    d) SENTENCE_FILE="$OPTARG"
     ;;
     b) BS="$OPTARG"
     ;;
