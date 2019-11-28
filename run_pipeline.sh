@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-while getopts ":d:f:b:e:l:m:v:" opt; do
+while getopts ":d:f:b:e:l:m:v:s:" opt; do
   case $opt in
     d) DATA_DIR="$OPTARG"
     ;;
@@ -17,6 +17,8 @@ while getopts ":d:f:b:e:l:m:v:" opt; do
     ;;
     v) VOCAB_SIZE="$OPTARG"
     ;;
+    s) SPLIT="$OPTARG"
+    ;;
     \?) echo "Invalid option -$OPTARG" >&2
     ;;
   esac
@@ -29,6 +31,7 @@ printf "EPOCHS is %s\n" "$EPOCHS"
 printf "LR is %s\n" "$LR"
 printf "MODEL_NAME is %s\n" "$MODEL_NAME"
 printf "VOCAB_SIZE is %s\n" "$VOCAB_SIZE"
+printf "SPLIT is %s\n" "$SPLIT"
 
 OUTPUT_DIR="${DATA_DIR}/processed"
 SENTENCEPIECE_MODEL_NAME="${OUTPUT_DIR}/sp-${VOCAB_SIZE}.model"
@@ -37,7 +40,12 @@ SENTENCEPIECE_VOCAB_NAME="${OUTPUT_DIR}/sp-${VOCAB_SIZE}.vocab"
 
 ./train_sentencepiece.sh $VOCAB_SIZE $DATA_DIR $SENTENCE_FILE 
 
-python preprocess_data.py --folder=$DATA_DIR --filename=$SENTENCE_FILE --sp_model=$SENTENCEPIECE_MODEL_NAME --sp_vocab=$SENTENCEPIECE_VOCAB_NAME
+if [ -z "$SPLIT" ]
+  then
+    python preprocess_data.py --folder=$DATA_DIR --filename=$SENTENCE_FILE --sp_model=$SENTENCEPIECE_MODEL_NAME --sp_vocab=$SENTENCEPIECE_VOCAB_NAME --split=SPLIT
+  else
+    python preprocess_data.py --folder=$DATA_DIR --filename=$SENTENCE_FILE --sp_model=$SENTENCEPIECE_MODEL_NAME --sp_vocab=$SENTENCEPIECE_VOCAB_NAME
+fi
 
 # For distributed training (multiple gpus)
 # May have to tweak nproc_per_node -variable..?

@@ -11,6 +11,7 @@ parser.add_argument("--filename", help="name of train file")
 parser.add_argument("--sp_model", help="location of sentencepiece model")
 parser.add_argument("--sp_vocab", help="location of sentencepiece vocab")
 parser.add_argument("--p", help="percentage of data to use", type=int, default=100)
+parser.add_argument("--split", help="percentage of data to use as validation", type=int, default=0.33)
 parser.add_argument("--nrows", help="number of rows to read", type=int)
 
 
@@ -22,6 +23,7 @@ PERCENTAGE = ARGS.p
 NROWS = ARGS.nrows
 SP_MODEL = ARGS.sp_model
 SP_VOCAB = ARGS.sp_vocab
+SPLIT = ARGS.split
 DELIMITER = "\t"
 HEADER = None
 print(f"percentage: {PERCENTAGE}, nrows: {NROWS}")
@@ -51,13 +53,12 @@ def preprocess():
     print("Data loaded! Starting preprocessing")
 
     spprocessor = SPProcessor(
-        lang="fi",
         sp_model=SP_MODEL,
         sp_vocab=SP_VOCAB
     )
 
     data = TextList.from_df(df, path=FOLDER, processor=spprocessor)
-    data = data.split_by_rand_pct(0.33)
+    data = data.split_by_rand_pct(SPLIT)
     print("Data split")
     data = data.label_for_lm()
     print("Data labelled")
