@@ -22,13 +22,13 @@ while getopts ":d:f:b:e:l:m:v:" opt; do
   esac
 done
 
-printf "Argument DATA_DIR is %s\n" "$DATA_DIR"
-printf "Argument SENTENCE_FILE is %s\n" "$SENTENCE_FILE"
-printf "Argument BS is %s\n" "$BS"
-printf "Argument EPOCHS is %s\n" "$EPOCHS"
-printf "Argument LR is %s\n" "$LR"
-printf "Argument MODEL_NAME is %s\n" "$MODEL_NAME"
-printf "Argument VOCAB_SIZE is %s\n" "$VOCAB_SIZE"
+printf "DATA_DIR is %s\n" "$DATA_DIR"
+printf "SENTENCE_FILE is %s\n" "$SENTENCE_FILE"
+printf "BS is %s\n" "$BS"
+printf "EPOCHS is %s\n" "$EPOCHS"
+printf "LR is %s\n" "$LR"
+printf "MODEL_NAME is %s\n" "$MODEL_NAME"
+printf "VOCAB_SIZE is %s\n" "$VOCAB_SIZE"
 
 OUTPUT_DIR="${DATA_DIR}/processed/up_low/tmp"
 SENTENCEPIECE_MODEL_NAME="${OUTPUT_DIR}/sp-${VOCAB_SIZE}.model"
