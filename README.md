@@ -6,7 +6,7 @@ Uses fastai.
 ## Usage
 
     pip install -r requirements.txt
-    ./run_pipeline.sh -d '/path/to/data/folder' -f 'file.txt' -b 128 -e 20 -v 30000
+    ./run_pipeline.sh -f '/path/to/data/folder' -d 'file.txt' -b 128 -e 20 -v 30000
 
 -b for batch size, -e for number of epochs, -v for vocabulary size\
 -f points to the folder in which the single text file resides, -d for the name of the datafile
