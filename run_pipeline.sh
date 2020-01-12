@@ -42,9 +42,9 @@ SENTENCEPIECE_VOCAB_NAME="${OUTPUT_DIR}/sp-${VOCAB_SIZE}.vocab"
 
 if [ -z "$SPLIT" ]
   then
-    python preprocess_data.py --folder=$DATA_DIR --filename=$SENTENCE_FILE --sp_model=$SENTENCEPIECE_MODEL_NAME --sp_vocab=$SENTENCEPIECE_VOCAB_NAME --split=SPLIT
+    python preprocess_data.py --folder=$DATA_DIR --filename=$SENTENCE_FILE --sp_model=$SENTENCEPIECE_MODEL_NAME --sp_vocab=$SENTENCEPIECE_VOCAB_NAME 
   else
-    python preprocess_data.py --folder=$DATA_DIR --filename=$SENTENCE_FILE --sp_model=$SENTENCEPIECE_MODEL_NAME --sp_vocab=$SENTENCEPIECE_VOCAB_NAME
+    python preprocess_data.py --folder=$DATA_DIR --filename=$SENTENCE_FILE --sp_model=$SENTENCEPIECE_MODEL_NAME --sp_vocab=$SENTENCEPIECE_VOCAB_NAME --split=$SPLIT
 fi
 
 # For distributed training (multiple gpus)
