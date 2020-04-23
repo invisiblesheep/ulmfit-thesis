@@ -14,10 +14,10 @@ parser = ArgumentParser()
 
 parser = ArgumentParser()
 parser.add_argument(
-    "--source", dest="source", help="source of train and valid files, vocab"
+    "--folder", dest="folder", help="source of train and valid files, vocab"
 )
-parser.add_argument("--batch_size", help="batch size", type=int)
-parser.add_argument("--epochs", help="epochs", type=int)
+parser.add_argument("--batch_size", help="batch size", type=int, default=128)
+parser.add_argument("--epochs", help="epochs", type=int, default=5)
 parser.add_argument(
     "--pretrained_name", help="continue training the model from saved pth"
 )
@@ -28,7 +28,7 @@ args = parser.parse_args()
 
 BS = args.batch_size
 EPOCHS = args.epochs
-SOURCE = args.source
+SOURCE = args.folder
 MODEL_NAME = args.pretrained_name
 LR = args.lr
 
@@ -51,7 +51,9 @@ class SaveModelCallbackFp32(TrackerCallback):
     def on_epoch_end(self, epoch:int, **kwargs:Any)->None:
         "Compare the value monitored to its best score and maybe save the model."
 
-        if self.every=="epoch": self.learn.to_fp32().save(f'{self.name}_{epoch}')
+        if self.every=="epoch": 
+            self.learn.to_fp32().save(f'{self.name}_{epoch}')
+            self.learn.to_fp32().save_encoder(f'{self.name}_{epoch}_encoder')
         else: #every="improvement"
             current = self.get_monitor_value()
 
@@ -59,6 +61,7 @@ class SaveModelCallbackFp32(TrackerCallback):
                 print(f'Better model found at epoch {epoch} with {self.monitor} value: {current}.')
                 self.best = current
                 self.learn.to_fp32().save(f'{self.name}')
+                self.learn.to_fp32().save_encoder(f'{self.name}_encoder')
 
     def on_train_end(self, **kwargs):
         "Load the best model."
@@ -69,11 +72,11 @@ class SaveModelCallbackFp32(TrackerCallback):
 def train_ulmfit():
     """ Load databunch, train language model with AWD-LSTM architecture """
 
-    trn_x = np.load(Path(SOURCE) / "processed/train_ids.npy", allow_pickle=True)
-    trn_y = np.load(Path(SOURCE) / "processed/train_labels.npy", allow_pickle=True)
-    val_x = np.load(Path(SOURCE) / "processed/val_ids.npy", allow_pickle=True)
-    val_y = np.load(Path(SOURCE) / "processed/val_labels.npy", allow_pickle=True)
-    vocab = Vocab.load(Path(SOURCE) / "processed/itos.pkl")
+    trn_x = np.load(Path(SOURCE) / "train_ids.npy", allow_pickle=True)
+    trn_y = np.load(Path(SOURCE) / "train_labels.npy", allow_pickle=True)
+    val_x = np.load(Path(SOURCE) / "val_ids.npy", allow_pickle=True)
+    val_y = np.load(Path(SOURCE) / "val_labels.npy", allow_pickle=True)
+    vocab = Vocab.load(Path(SOURCE) / "itos.pkl")
 
     data_lm = TextLMDataBunch.from_ids(
         SOURCE,
@@ -133,6 +136,7 @@ def train_ulmfit():
     learn.unfreeze()
     print("Starting training..")
     learn.fit_one_cycle(EPOCHS, lr, moms=(0.8, 0.7))
+    learn.to_fp32().save_encoder('ulmfit_encoder_final')
 
 
 train_ulmfit()
